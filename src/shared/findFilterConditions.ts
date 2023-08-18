@@ -1,24 +1,28 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export const findFilterConditions = (
   searchTerm: string | undefined,
   filtersData: object,
   searchableFields: string[]
 ) => {
   const andConditions = [];
+
   if (searchTerm) {
     andConditions.push({
-      $or: searchableFields.map(field => ({
+      OR: searchableFields.map(field => ({
         [field]: {
-          $regex: searchTerm,
-          $options: 'i',
+          contains: searchTerm,
+          mode: 'insensitive',
         },
       })),
     });
   }
 
-  if (Object.keys(filtersData).length) {
+  if (Object.keys(filtersData).length > 0) {
     andConditions.push({
-      $and: Object.entries(filtersData).map(([field, value]) => ({
-        [field]: value,
+      AND: Object.keys(filtersData).map(key => ({
+        [key]: {
+          equals: (filtersData as any)[key],
+        },
       })),
     });
   }

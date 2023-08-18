@@ -21,6 +21,7 @@ model AcademicSemester {
   updatedAt  DateTime  @updatedAt
   students   Student[]
 
+  @@unique([year, title, code])
   @@map("academic_semesters")
 }
 
@@ -58,7 +59,7 @@ model Student {
   middleName   String
   profileImage String
   email        String
-  contactNo    Int
+  contactNo    String
   gender       String
   bloodGroup   String
   createdAt    DateTime @default(now())
@@ -84,7 +85,7 @@ model Faculy {
   middleName   String
   profileImage String
   email        String
-  contactNo    Int
+  contactNo    String
   gender       String
   bloodGroup   String
   designation  String
