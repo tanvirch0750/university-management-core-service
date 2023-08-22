@@ -7,8 +7,11 @@ import { orderByConditions } from '../../../shared/orderCondition';
 import prisma from '../../../shared/prisma';
 import { buildingSearchableFields } from './building.constant';
 import { IBuildingFilters } from './building.interface';
+
 const insertIntoDB = async (data: Building): Promise<Building> => {
-  const result = await prisma.building.create({ data });
+  const result = await prisma.building.create({
+    data,
+  });
   return result;
 };
 

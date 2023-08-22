@@ -10,6 +10,7 @@ import { BuildingServices } from './building.service';
 
 export const insertIntoDB: RequestHandler = catchAsync(async (req, res) => {
   const data = req.body;
+
   const result = await BuildingServices.insertIntoDB(data);
 
   sendResponse(res, {
