@@ -32,7 +32,7 @@ model AcademicFaculty {
   updatedAt           DateTime             @updatedAt
   academicDepartments AcademicDepartment[]
   students            Student[]
-  faculties           Faculy[]
+  faculties           Faculty[]
 
   @@map("academic_faculty")
 }
@@ -46,7 +46,7 @@ model AcademicDepartment {
   academicFaculty   AcademicFaculty @relation(fields: [academicFacultyId], references: [id])
   academicFacultyId String
   students          Student[]
-  faculties         Faculy[]
+  faculties         Faculty[]
 
   @@map("academic_departments")
 }
@@ -77,7 +77,7 @@ model Student {
   @@map("students")
 }
 
-model Faculy {
+model Faculty {
   id           String   @id @default(uuid())
   facultyId    String
   firstName    String
