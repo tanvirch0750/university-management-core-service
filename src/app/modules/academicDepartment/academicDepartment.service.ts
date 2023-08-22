@@ -11,7 +11,12 @@ import { IAcademicDepartmentFilters } from './academicDepartment.interface';
 const insertIntoDB = async (
   data: AcademicDepartment
 ): Promise<AcademicDepartment> => {
-  const result = await prisma.academicDepartment.create({ data });
+  const result = await prisma.academicDepartment.create({
+    data,
+    include: {
+      academicFaculty: true,
+    },
+  });
   return result;
 };
 
@@ -34,6 +39,9 @@ const getAllFromDB = async (
   const orderCondition = orderByConditions(options);
 
   const result = await prisma.academicDepartment.findMany({
+    include: {
+      academicFaculty: true,
+    },
     where: whereConditons,
     skip,
     take: limit,
@@ -57,7 +65,40 @@ const getDataById = async (id: string): Promise<AcademicDepartment | null> => {
     where: {
       id,
     },
+    include: {
+      academicFaculty: true,
+    },
   });
+  return result;
+};
+
+const updateDataById = async (
+  id: string,
+  payload: Partial<AcademicDepartment>
+): Promise<AcademicDepartment> => {
+  const result = await prisma.academicDepartment.update({
+    where: {
+      id,
+    },
+    data: payload,
+    include: {
+      academicFaculty: true,
+    },
+  });
+
+  return result;
+};
+
+const deleteDataById = async (id: string): Promise<AcademicDepartment> => {
+  const result = await prisma.academicDepartment.delete({
+    where: {
+      id,
+    },
+    include: {
+      academicFaculty: true,
+    },
+  });
+
   return result;
 };
 
@@ -65,4 +106,6 @@ export const AcademicDepartmentServices = {
   insertIntoDB,
   getAllFromDB,
   getDataById,
+  updateDataById,
+  deleteDataById,
 };

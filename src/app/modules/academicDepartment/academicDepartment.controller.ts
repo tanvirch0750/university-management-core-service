@@ -69,8 +69,57 @@ const getDataById: RequestHandler = catchAsync(async (req, res, next) => {
   });
 });
 
+const updateDataById: RequestHandler = catchAsync(async (req, res, next) => {
+  const payload = req.body;
+
+  const result = await AcademicDepartmentServices.updateDataById(
+    req.params.id,
+    payload
+  );
+
+  if (!result) {
+    return next(
+      new ApiError(
+        `No academic department found with this id`,
+        httpStatus.NOT_FOUND
+      )
+    );
+  }
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    status: 'success',
+    message: 'Academic department updated successfully',
+    data: result,
+  });
+});
+
+const deleteDataById: RequestHandler = catchAsync(async (req, res, next) => {
+  const result = await AcademicDepartmentServices.deleteDataById(req.params.id);
+
+  if (!result) {
+    return next(
+      new ApiError(
+        `No academic department found with this id`,
+        httpStatus.NOT_FOUND
+      )
+    );
+  }
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    status: 'success',
+    message: 'Academic department deleted successfully',
+    data: result,
+  });
+});
+
 export const AcademicDepartmentController = {
   insertIntoDB,
   getAllFromDB,
   getDataById,
+  updateDataById,
+  deleteDataById,
 };
