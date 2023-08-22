@@ -64,8 +64,48 @@ const getDataById: RequestHandler = catchAsync(async (req, res, next) => {
   });
 });
 
+const updateDataById: RequestHandler = catchAsync(async (req, res, next) => {
+  const payload = req.body;
+
+  const result = await FacultyServices.updateDataById(req.params.id, payload);
+
+  if (!result) {
+    return next(
+      new ApiError(`No faculty found with this id`, httpStatus.NOT_FOUND)
+    );
+  }
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    status: 'success',
+    message: 'Faculty updated successfully',
+    data: result,
+  });
+});
+
+const deleteDataById: RequestHandler = catchAsync(async (req, res, next) => {
+  const result = await FacultyServices.deleteDataById(req.params.id);
+
+  if (!result) {
+    return next(
+      new ApiError(`No faculty found with this id`, httpStatus.NOT_FOUND)
+    );
+  }
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    status: 'success',
+    message: 'Faculty deleted successfully',
+    data: result,
+  });
+});
+
 export const FacultyController = {
   insertIntoDB,
   getAllFromDB,
   getDataById,
+  updateDataById,
+  deleteDataById,
 };
