@@ -1,0 +1,66 @@
+import { Faculty, Prisma } from '@prisma/client';
+import { calculatePagination } from '../../../helpers/paginationHelper';
+import { IGenericPaginationResponse } from '../../../interfaces/genericPaginationResponse';
+import { IpaginationOptions } from '../../../interfaces/paginationOptions';
+import { findFilterConditions } from '../../../shared/findFilterConditions';
+import { orderByConditions } from '../../../shared/orderCondition';
+import prisma from '../../../shared/prisma';
+import { facultySearchableFields } from './faculty.constant';
+import { IFacultyFilters } from './faculty.interface';
+
+const insertIntoDB = async (data: Faculty): Promise<Faculty> => {
+  const result = await prisma.faculty.create({ data });
+  return result;
+};
+
+const getAllFromDB = async (
+  filters: IFacultyFilters,
+  options: IpaginationOptions
+): Promise<IGenericPaginationResponse<Faculty[]>> => {
+  const { page, limit, skip } = calculatePagination(options);
+  const { searchTerm, ...filterData } = filters;
+
+  const andConditions = findFilterConditions(
+    searchTerm,
+    filterData,
+    facultySearchableFields
+  );
+
+  const whereConditons: Prisma.FacultyWhereInput =
+    andConditions.length > 0 ? { AND: andConditions } : {};
+
+  const orderCondition = orderByConditions(options);
+
+  const result = await prisma.faculty.findMany({
+    where: whereConditons,
+    skip,
+    take: limit,
+    orderBy: orderCondition,
+  });
+
+  const total = await prisma.faculty.count();
+
+  return {
+    meta: {
+      total,
+      page,
+      limit,
+    },
+    data: result,
+  };
+};
+
+const getDataById = async (id: string): Promise<Faculty | null> => {
+  const result = await prisma.faculty.findUnique({
+    where: {
+      id,
+    },
+  });
+  return result;
+};
+
+export const FacultyServices = {
+  insertIntoDB,
+  getAllFromDB,
+  getDataById,
+};
