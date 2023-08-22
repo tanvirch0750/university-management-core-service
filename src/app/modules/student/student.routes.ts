@@ -6,6 +6,12 @@ import { StudentValidation } from './student.validation';
 const router = express.Router();
 
 router.get('/:id', StudentController.getDataById);
+router.delete('/:id', StudentController.deleteDataById);
+router.patch(
+  '/:id',
+  validateRequest(StudentValidation.update),
+  StudentController.updateDataById
+);
 router.post(
   '/create-student',
   validateRequest(StudentValidation.create),

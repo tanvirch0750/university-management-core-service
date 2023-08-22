@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get('/:id', AcademicFacultyController.getDataById);
 router.post(
-  '/create-faculy',
+  '/create-faculty',
   validateRequest(AcademicFacultyValidation.create),
   AcademicFacultyController.insertIntoDB
 );

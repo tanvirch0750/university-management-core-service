@@ -1,13 +1,12 @@
 import { RequestHandler } from 'express';
 import httpStatus from 'http-status';
-import catchAsync from '../../../shared/catchAsync';
-import { StudentServices } from './student.service';
-import sendResponse from '../../../shared/sendResponse';
-import pick from '../../../shared/pick';
-import { studentFilterableFields } from './student.constant';
 import { paginationFields } from '../../../constants/paginationFields';
 import ApiError from '../../../errors/ApiError';
-
+import catchAsync from '../../../shared/catchAsync';
+import pick from '../../../shared/pick';
+import sendResponse from '../../../shared/sendResponse';
+import { studentFilterableFields } from './student.constant';
+import { StudentServices } from './student.service';
 
 export const insertIntoDB: RequestHandler = catchAsync(async (req, res) => {
   const data = req.body;
@@ -65,8 +64,48 @@ const getDataById: RequestHandler = catchAsync(async (req, res, next) => {
   });
 });
 
+const updateDataById: RequestHandler = catchAsync(async (req, res, next) => {
+  const payload = req.body;
+
+  const result = await StudentServices.updateDataById(req.params.id, payload);
+
+  if (!result) {
+    return next(
+      new ApiError(`No Student found with this id`, httpStatus.NOT_FOUND)
+    );
+  }
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    status: 'success',
+    message: 'Student updated successfully',
+    data: result,
+  });
+});
+
+const deleteDataById: RequestHandler = catchAsync(async (req, res, next) => {
+  const result = await StudentServices.deleteDataById(req.params.id);
+
+  if (!result) {
+    return next(
+      new ApiError(`No Student found with this id`, httpStatus.NOT_FOUND)
+    );
+  }
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    status: 'success',
+    message: 'Student deleted successfully',
+    data: result,
+  });
+});
+
 export const StudentController = {
   insertIntoDB,
   getAllFromDB,
   getDataById,
+  updateDataById,
+  deleteDataById,
 };
