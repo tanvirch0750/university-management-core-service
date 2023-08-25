@@ -102,10 +102,32 @@ const deleteDataById: RequestHandler = catchAsync(async (req, res, next) => {
   });
 });
 
+const assignFaculties: RequestHandler = catchAsync(async (req, res, next) => {
+  const result = await CourseServices.assignFaculties(
+    req.params.id,
+    req.body.faculties
+  );
+
+  if (!result) {
+    return next(
+      new ApiError(`No course found with this id`, httpStatus.NOT_FOUND)
+    );
+  }
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    status: 'success',
+    message: 'Course Faculties assigned successfully',
+    data: result,
+  });
+});
+
 export const CourseController = {
   insertIntoDB,
   getAllFromDB,
   getDataById,
   updateDataById,
   deleteDataById,
+  assignFaculties,
 };
