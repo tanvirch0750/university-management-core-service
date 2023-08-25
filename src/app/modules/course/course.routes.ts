@@ -29,6 +29,12 @@ router.post(
   CourseController.assignFaculties
 );
 
+router.delete(
+  '/:id/remove-faculties',
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  CourseController.removeFaculties
+);
+
 router.post(
   '/create-course',
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),

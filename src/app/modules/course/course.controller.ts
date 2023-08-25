@@ -123,6 +123,27 @@ const assignFaculties: RequestHandler = catchAsync(async (req, res, next) => {
   });
 });
 
+const removeFaculties: RequestHandler = catchAsync(async (req, res, next) => {
+  const result = await CourseServices.removeFaculties(
+    req.params.id,
+    req.body.faculties
+  );
+
+  if (!result) {
+    return next(
+      new ApiError(`No course-faculty found with this id`, httpStatus.NOT_FOUND)
+    );
+  }
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    status: 'success',
+    message: 'Course Faculties deleted successfully',
+    data: result,
+  });
+});
+
 export const CourseController = {
   insertIntoDB,
   getAllFromDB,
@@ -130,4 +151,5 @@ export const CourseController = {
   updateDataById,
   deleteDataById,
   assignFaculties,
+  removeFaculties,
 };
