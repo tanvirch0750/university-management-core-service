@@ -23,6 +23,20 @@ router.patch(
 );
 
 router.post(
+  '/:id/assign-courses',
+  validateRequest(facultyValidation.assignOrRemoveCourses),
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  FacultyController.assignCourses
+);
+
+router.delete(
+  '/:id/remove-courses',
+  validateRequest(facultyValidation.assignOrRemoveCourses),
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  FacultyController.removeCourses
+);
+
+router.post(
   '/create-faculty',
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
   validateRequest(facultyValidation.create),

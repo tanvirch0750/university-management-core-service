@@ -102,10 +102,50 @@ const deleteDataById: RequestHandler = catchAsync(async (req, res, next) => {
   });
 });
 
+const assignCourses: RequestHandler = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const result = await FacultyServices.assignCourses(id, req.body.courses);
+
+  if (!result) {
+    return next(
+      new ApiError(`No course found with this id`, httpStatus.NOT_FOUND)
+    );
+  }
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    status: 'success',
+    message: 'Course Faculties assigned successfully',
+    data: result,
+  });
+});
+
+const removeCourses: RequestHandler = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const result = await FacultyServices.removeCourses(id, req.body.courses);
+
+  if (!result) {
+    return next(
+      new ApiError(`No course-faculty found with this id`, httpStatus.NOT_FOUND)
+    );
+  }
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    status: 'success',
+    message: 'Course Faculties deleted successfully',
+    data: result,
+  });
+});
+
 export const FacultyController = {
   insertIntoDB,
   getAllFromDB,
   getDataById,
   updateDataById,
   deleteDataById,
+  assignCourses,
+  removeCourses,
 };
