@@ -5,35 +5,35 @@ import ApiError from '../../../errors/ApiError';
 import catchAsync from '../../../shared/catchAsync';
 import pick from '../../../shared/pick';
 import sendResponse from '../../../shared/sendResponse';
-import { offeredCourseFilterableFields } from './offeredCourse.constant';
-import { OfferedCourseServices } from './offeredCourse.service';
+import { offeredCourseSectionFilterableFields } from './offeredCourseSection.constant';
+import { OfferedCourseSectionService } from './offeredCourseSection.service';
 
 export const insertIntoDB: RequestHandler = catchAsync(async (req, res) => {
   const data = req.body;
-  const result = await OfferedCourseServices.insertIntoDB(data);
+  const result = await OfferedCourseSectionService.insertIntoDB(data);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     status: 'success',
-    message: 'Offered courses created successfully',
+    message: 'Offered courses section created successfully',
     data: result,
   });
 });
 
 export const getAllFromDB: RequestHandler = catchAsync(
   async (req, res, next) => {
-    const filters = pick(req.query, offeredCourseFilterableFields);
+    const filters = pick(req.query, offeredCourseSectionFilterableFields);
     const paginationOptions = pick(req.query, paginationFields);
 
-    const result = await OfferedCourseServices.getAllFromDB(
+    const result = await OfferedCourseSectionService.getAllFromDB(
       filters,
       paginationOptions
     );
 
     if (result.data.length === 0) {
       return next(
-        new ApiError('No offered course found!', httpStatus.NOT_FOUND)
+        new ApiError('No offered course section found!', httpStatus.NOT_FOUND)
       );
     }
 
@@ -41,7 +41,7 @@ export const getAllFromDB: RequestHandler = catchAsync(
       statusCode: httpStatus.OK,
       success: true,
       status: 'success',
-      message: 'Offered course retirved successfully',
+      message: 'Offered course section retirved successfully',
       meta: result.meta,
       data: result.data,
     });
@@ -49,11 +49,14 @@ export const getAllFromDB: RequestHandler = catchAsync(
 );
 
 const getDataById: RequestHandler = catchAsync(async (req, res, next) => {
-  const result = await OfferedCourseServices.getDataById(req.params.id);
+  const result = await OfferedCourseSectionService.getDataById(req.params.id);
 
   if (!result) {
     return next(
-      new ApiError(`No offered course found with this id`, httpStatus.NOT_FOUND)
+      new ApiError(
+        `No offered course section found with this id`,
+        httpStatus.NOT_FOUND
+      )
     );
   }
 
@@ -61,7 +64,7 @@ const getDataById: RequestHandler = catchAsync(async (req, res, next) => {
     statusCode: httpStatus.OK,
     success: true,
     status: 'success',
-    message: 'Offered course retrived successfully',
+    message: 'Offered course section retrived successfully',
     data: result,
   });
 });
@@ -69,14 +72,17 @@ const getDataById: RequestHandler = catchAsync(async (req, res, next) => {
 const updateDataById: RequestHandler = catchAsync(async (req, res, next) => {
   const payload = req.body;
 
-  const result = await OfferedCourseServices.updateDataById(
+  const result = await OfferedCourseSectionService.updateDataById(
     req.params.id,
     payload
   );
 
   if (!result) {
     return next(
-      new ApiError(`No offered course found with this id`, httpStatus.NOT_FOUND)
+      new ApiError(
+        `No offered course seciton found with this id`,
+        httpStatus.NOT_FOUND
+      )
     );
   }
 
@@ -84,17 +90,22 @@ const updateDataById: RequestHandler = catchAsync(async (req, res, next) => {
     statusCode: httpStatus.OK,
     success: true,
     status: 'success',
-    message: 'Offered course updated successfully',
+    message: 'Offered course section updated successfully',
     data: result,
   });
 });
 
 const deleteDataById: RequestHandler = catchAsync(async (req, res, next) => {
-  const result = await OfferedCourseServices.deleteDataById(req.params.id);
+  const result = await OfferedCourseSectionService.deleteDataById(
+    req.params.id
+  );
 
   if (!result) {
     return next(
-      new ApiError(`No offered course found with this id`, httpStatus.NOT_FOUND)
+      new ApiError(
+        `No offered course section found with this id`,
+        httpStatus.NOT_FOUND
+      )
     );
   }
 
@@ -102,12 +113,12 @@ const deleteDataById: RequestHandler = catchAsync(async (req, res, next) => {
     statusCode: httpStatus.OK,
     success: true,
     status: 'success',
-    message: 'Offered course deleted successfully',
+    message: 'Offered course section deleted successfully',
     data: result,
   });
 });
 
-export const OfferedCourseController = {
+export const OfferedCourseSectionController = {
   insertIntoDB,
   getAllFromDB,
   getDataById,

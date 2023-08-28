@@ -1,0 +1,162 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { OfferedCourseSection, Prisma } from '@prisma/client';
+import httpStatus from 'http-status';
+import ApiError from '../../../errors/ApiError';
+import { calculatePagination } from '../../../helpers/paginationHelper';
+import { IGenericPaginationResponse } from '../../../interfaces/genericPaginationResponse';
+import { IpaginationOptions } from '../../../interfaces/paginationOptions';
+import { findFilterConditions } from '../../../shared/findFilterConditions';
+import { orderByConditions } from '../../../shared/orderCondition';
+import prisma from '../../../shared/prisma';
+import { offeredCourseSearchableFields } from '../offeredCourse/offeredCourse.constant';
+import { IOfferedCourseSectionFilterRequest } from './offeredCourseSection.interface';
+
+const insertIntoDB = async (data: any): Promise<OfferedCourseSection> => {
+  const isExistOfferedCourse = await prisma.offeredCourse.findFirst({
+    where: {
+      id: data.offeredCourseId,
+    },
+  });
+
+  if (!isExistOfferedCourse) {
+    throw new ApiError(
+      'Offered Course does not exist!',
+      httpStatus.BAD_REQUEST
+    );
+  }
+
+  data.semesterRegistrationId = isExistOfferedCourse.semesterRegistrationId;
+  data.academicDepartmentId = isExistOfferedCourse.academicDepartmentId;
+
+  const result = await prisma.offeredCourseSection.create({
+    data,
+  });
+
+  return result;
+};
+
+const getAllFromDB = async (
+  filters: IOfferedCourseSectionFilterRequest,
+  options: IpaginationOptions
+): Promise<IGenericPaginationResponse<OfferedCourseSection[]>> => {
+  const { page, limit, skip } = calculatePagination(options);
+  const { searchTerm, ...filterData } = filters;
+
+  const andConditions = findFilterConditions(
+    searchTerm,
+    filterData,
+    offeredCourseSearchableFields
+  );
+
+  const whereConditons: Prisma.OfferedCourseSectionWhereInput =
+    andConditions.length > 0 ? { AND: andConditions } : {};
+
+  const orderCondition = orderByConditions(options);
+
+  const result = await prisma.offeredCourseSection.findMany({
+    include: {
+      offeredCourse: {
+        include: {
+          course: true,
+        },
+      },
+      semesterRegistration: true,
+      academicDepartment: true,
+    },
+    where: whereConditons,
+    skip,
+    take: limit,
+    orderBy: orderCondition,
+  });
+
+  const total = await prisma.offeredCourseSection.count();
+
+  return {
+    meta: {
+      total,
+      page,
+      limit,
+    },
+    data: result,
+  };
+};
+
+const getDataById = async (
+  id: string
+): Promise<OfferedCourseSection | null> => {
+  const result = await prisma.offeredCourseSection.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      offeredCourse: {
+        include: {
+          course: true,
+        },
+      },
+      semesterRegistration: true,
+      academicDepartment: true,
+    },
+  });
+  return result;
+};
+
+const updateDataById = async (
+  id: string,
+  payload: Partial<OfferedCourseSection>
+): Promise<OfferedCourseSection> => {
+  const isExist = await prisma.offeredCourseSection.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  if (!isExist) {
+    throw new ApiError('Data not found!', httpStatus.BAD_REQUEST);
+  }
+
+  const result = await prisma.offeredCourseSection.update({
+    where: {
+      id,
+    },
+    data: payload,
+    include: {
+      offeredCourse: {
+        include: {
+          course: true,
+        },
+      },
+      semesterRegistration: true,
+      academicDepartment: true,
+    },
+  });
+
+  return result;
+};
+
+const deleteDataById = async (id: string): Promise<OfferedCourseSection> => {
+  const result = await prisma.offeredCourseSection.delete({
+    where: {
+      id,
+    },
+    include: {
+      offeredCourse: {
+        include: {
+          course: true,
+        },
+      },
+      semesterRegistration: true,
+      academicDepartment: true,
+    },
+  });
+
+  return result;
+};
+
+export const OfferedCourseSectionService = {
+  insertIntoDB,
+  getAllFromDB,
+  getDataById,
+  updateDataById,
+  deleteDataById,
+};
