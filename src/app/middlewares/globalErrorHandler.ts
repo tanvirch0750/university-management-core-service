@@ -5,7 +5,7 @@ import { ZodError } from 'zod';
 import config from '../../config';
 import ApiError from '../../errors/ApiError';
 import { handleBadValueError } from '../../errors/handleBadValueError';
-import { handleCastErrorDB } from '../../errors/handleCastErrorDB';
+import { handleClientError } from '../../errors/handleClientError';
 import { handleDuplicateFieldsErrorDB } from '../../errors/handleDuplicateFieldsErrorDB';
 import { handleValidationErrorDB } from '../../errors/handleValidationErroDB';
 import { handleZodError } from '../../errors/handleZodError';
@@ -50,7 +50,7 @@ const allErrors = (err: any) => {
     error = handleZodError(error);
   }
 
-  if (err?.name === 'CastError') error = handleCastErrorDB(error);
+  if (err?.name === 'CastError') error = handleClientError(error);
   if (err?.code === 11000) error = handleDuplicateFieldsErrorDB(error);
   if (err instanceof Prisma.PrismaClientValidationError) {
     error = handleValidationErrorDB(error);
