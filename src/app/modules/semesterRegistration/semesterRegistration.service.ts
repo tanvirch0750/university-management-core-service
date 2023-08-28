@@ -73,7 +73,7 @@ const getAllFromDB = async (
     orderBy: orderCondition,
   });
 
-  const total = await prisma.room.count();
+  const total = await prisma.semesterRegestration.count();
 
   return {
     meta: {
@@ -103,6 +103,38 @@ const updateDataById = async (
   id: string,
   payload: Partial<SemesterRegestration>
 ): Promise<SemesterRegestration> => {
+  const isExist = await prisma.semesterRegestration.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  if (!isExist) {
+    throw new ApiError('Data not found!', httpStatus.BAD_REQUEST);
+  }
+
+  if (
+    payload.status &&
+    isExist.status === SemesterRegestrationStatus.UPCOMING &&
+    payload.status !== SemesterRegestrationStatus.ONGOING
+  ) {
+    throw new ApiError(
+      'Can only move from UPCOMING to ONGOING',
+      httpStatus.BAD_REQUEST
+    );
+  }
+
+  if (
+    payload.status &&
+    isExist.status === SemesterRegestrationStatus.ONGOING &&
+    payload.status !== SemesterRegestrationStatus.ENDED
+  ) {
+    throw new ApiError(
+      'Can only move from ONGOING to ENDED',
+      httpStatus.BAD_REQUEST
+    );
+  }
+
   const result = await prisma.semesterRegestration.update({
     where: {
       id,
