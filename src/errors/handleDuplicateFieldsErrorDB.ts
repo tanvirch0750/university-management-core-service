@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import ApiError from './ApiError';
 
 export const handleDuplicateFieldsErrorDB = (err: any) => {

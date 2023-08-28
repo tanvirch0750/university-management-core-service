@@ -1,19 +1,15 @@
-import mongoose from 'mongoose';
-import { IGenereicErrorMessage } from '../interfaces/errorMessage';
+import { Prisma } from '@prisma/client';
 import ApiError from './ApiError';
 
 export const handleValidationErrorDB = (
-  err: mongoose.Error.ValidationError
+  error: Prisma.PrismaClientValidationError
 ) => {
-  const errorsObj: IGenereicErrorMessage[] = Object.values(err.errors).map(
-    (el: mongoose.Error.ValidatorError | mongoose.Error.CastError) => {
-      return {
-        path: el.path,
-        message: el.message,
-      };
-    }
-  );
+  const errorsObj = [
+    {
+      path: '',
+      message: error.message || 'Some field are not valid field',
+    },
+  ];
 
-  const message = `Validation Error`;
-  return new ApiError(message, 400, errorsObj);
+  return new ApiError('Validation Error', 400, errorsObj);
 };

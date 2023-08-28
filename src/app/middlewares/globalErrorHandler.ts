@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Prisma } from '@prisma/client';
 import { ErrorRequestHandler, Response } from 'express';
 import { ZodError } from 'zod';
 import config from '../../config';
@@ -50,7 +52,7 @@ const allErrors = (err: any) => {
 
   if (err?.name === 'CastError') error = handleCastErrorDB(error);
   if (err?.code === 11000) error = handleDuplicateFieldsErrorDB(error);
-  if (err?.name === 'ValidationError') {
+  if (err instanceof Prisma.PrismaClientValidationError) {
     error = handleValidationErrorDB(error);
   }
   if (config.env === 'production') {
