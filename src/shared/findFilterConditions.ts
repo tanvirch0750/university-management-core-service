@@ -2,7 +2,9 @@
 export const findFilterConditions = (
   searchTerm: string | undefined,
   filtersData: object,
-  searchableFields: string[]
+  searchableFields: string[],
+  relationalFields: string[],
+  relationalFieldsMapper: { [key: string]: string }
 ) => {
   const andConditions = [];
 
@@ -17,13 +19,32 @@ export const findFilterConditions = (
     });
   }
 
+  // if (Object.keys(filtersData).length > 0) {
+  //   andConditions.push({
+  //     AND: Object.keys(filtersData).map(key => ({
+  //       [key]: {
+  //         equals: (filtersData as any)[key],
+  //       },
+  //     })),
+  //   });
+  // }
   if (Object.keys(filtersData).length > 0) {
     andConditions.push({
-      AND: Object.keys(filtersData).map(key => ({
-        [key]: {
-          equals: (filtersData as any)[key],
-        },
-      })),
+      AND: Object.keys(filtersData).map(key => {
+        if (relationalFields.includes(key)) {
+          return {
+            [relationalFieldsMapper[key]]: {
+              id: (filtersData as any)[key],
+            },
+          };
+        } else {
+          return {
+            [key]: {
+              equals: (filtersData as any)[key],
+            },
+          };
+        }
+      }),
     });
   }
 
