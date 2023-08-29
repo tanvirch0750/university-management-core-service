@@ -11,7 +11,11 @@ import { IpaginationOptions } from '../../../interfaces/paginationOptions';
 import { findFilterConditions } from '../../../shared/findFilterConditions';
 import { orderByConditions } from '../../../shared/orderCondition';
 import prisma from '../../../shared/prisma';
-import { semesterRegistrationSearchableFields } from './semesterRegistration.constant';
+import {
+  semesterRegistrationRelationalFields,
+  semesterRegistrationRelationalFieldsMapper,
+  semesterRegistrationSearchableFields,
+} from './semesterRegistration.constant';
 import { ISemesterRegistrationFilterRequest } from './semesterRegistration.interface';
 
 const insertIntoDB = async (
@@ -55,7 +59,9 @@ const getAllFromDB = async (
   const andConditions = findFilterConditions(
     searchTerm,
     filterData,
-    semesterRegistrationSearchableFields
+    semesterRegistrationSearchableFields,
+    semesterRegistrationRelationalFields,
+    semesterRegistrationRelationalFieldsMapper
   );
 
   const whereConditons: Prisma.SemesterRegestrationWhereInput =

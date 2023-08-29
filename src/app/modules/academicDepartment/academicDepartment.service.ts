@@ -5,7 +5,11 @@ import { IpaginationOptions } from '../../../interfaces/paginationOptions';
 import { findFilterConditions } from '../../../shared/findFilterConditions';
 import { orderByConditions } from '../../../shared/orderCondition';
 import prisma from '../../../shared/prisma';
-import { academicDepartmentSearchableFields } from './academicDepartment.constant';
+import {
+  academicDepartmentRelationalFields,
+  academicDepartmentRelationalFieldsMapper,
+  academicDepartmentSearchableFields,
+} from './academicDepartment.constant';
 import { IAcademicDepartmentFilters } from './academicDepartment.interface';
 
 const insertIntoDB = async (
@@ -30,7 +34,9 @@ const getAllFromDB = async (
   const andConditions = findFilterConditions(
     searchTerm,
     filterData,
-    academicDepartmentSearchableFields
+    academicDepartmentSearchableFields,
+    academicDepartmentRelationalFields,
+    academicDepartmentRelationalFieldsMapper
   );
 
   const whereConditons: Prisma.AcademicDepartmentWhereInput =

@@ -1,20 +1,31 @@
 export const facultySearchableFields = [
-  'id',
+  'firstName',
+  'lastName',
+  'middleName',
   'email',
   'contactNo',
+  'facultyId',
   'designation',
-  'fisrtName',
-  'middleName',
-  'lastName',
 ];
 
 export const facultyFilterableFields = [
   'searchTerm',
-  'id',
-  'bloodGroup',
-  'designation',
+  'facultyId',
   'email',
   'contactNo',
-  'emergencyContactNo',
+  'gender',
+  'bloodGroup',
+  'gender',
   'designation',
+  'academicFacultyId',
+  'academicDepartmentId',
 ];
+
+export const facultyRelationalFields: string[] = [
+  'academicFacultyId',
+  'academicDepartmentId',
+];
+export const facultyRelationalFieldsMapper: { [key: string]: string } = {
+  academicFacultyId: 'academicFaculty',
+  academicDepartmentId: 'academicDepartment',
+};

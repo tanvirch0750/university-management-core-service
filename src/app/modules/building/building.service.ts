@@ -2,7 +2,7 @@ import { Building, Prisma } from '@prisma/client';
 import { calculatePagination } from '../../../helpers/paginationHelper';
 import { IGenericPaginationResponse } from '../../../interfaces/genericPaginationResponse';
 import { IpaginationOptions } from '../../../interfaces/paginationOptions';
-import { findFilterConditions } from '../../../shared/findFilterConditions';
+import { findFilterConditionsWithoutRelation } from '../../../shared/findFilterConditions';
 import { orderByConditions } from '../../../shared/orderCondition';
 import prisma from '../../../shared/prisma';
 import { buildingSearchableFields } from './building.constant';
@@ -22,7 +22,7 @@ const getAllFromDB = async (
   const { page, limit, skip } = calculatePagination(options);
   const { searchTerm, ...filterData } = filters;
 
-  const andConditions = findFilterConditions(
+  const andConditions = findFilterConditionsWithoutRelation(
     searchTerm,
     filterData,
     buildingSearchableFields

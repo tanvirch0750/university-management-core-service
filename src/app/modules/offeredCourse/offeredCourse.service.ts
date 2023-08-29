@@ -8,6 +8,10 @@ import { asyncForEach } from '../../../shared/asyncForeach';
 import { findFilterConditions } from '../../../shared/findFilterConditions';
 import { orderByConditions } from '../../../shared/orderCondition';
 import prisma from '../../../shared/prisma';
+import {
+  offeredCourseSectionRelationalFields,
+  offeredCourseSectionRelationalFieldsMapper,
+} from '../offeredCourseSection/offeredCourseSection.constant';
 import { offeredCourseSearchableFields } from './offeredCourse.constant';
 import {
   ICreateOfferedCourse,
@@ -60,7 +64,9 @@ const getAllFromDB = async (
   const andConditions = findFilterConditions(
     searchTerm,
     filterData,
-    offeredCourseSearchableFields
+    offeredCourseSearchableFields,
+    offeredCourseSectionRelationalFields,
+    offeredCourseSectionRelationalFieldsMapper
   );
 
   const whereConditons: Prisma.OfferedCourseWhereInput =

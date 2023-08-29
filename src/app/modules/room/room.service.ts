@@ -5,7 +5,11 @@ import { IpaginationOptions } from '../../../interfaces/paginationOptions';
 import { findFilterConditions } from '../../../shared/findFilterConditions';
 import { orderByConditions } from '../../../shared/orderCondition';
 import prisma from '../../../shared/prisma';
-import { roomSearchableFields } from './room.constant';
+import {
+  roomRelationalFields,
+  roomRelationalFieldsMapper,
+  roomSearchableFields,
+} from './room.constant';
 import { IRoomFilters } from './room.interface';
 
 const insertIntoDB = async (data: Room): Promise<Room> => {
@@ -28,7 +32,9 @@ const getAllFromDB = async (
   const andConditions = findFilterConditions(
     searchTerm,
     filterData,
-    roomSearchableFields
+    roomSearchableFields,
+    roomRelationalFields,
+    roomRelationalFieldsMapper
   );
 
   const whereConditons: Prisma.RoomWhereInput =

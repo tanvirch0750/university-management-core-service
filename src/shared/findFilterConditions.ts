@@ -19,15 +19,6 @@ export const findFilterConditions = (
     });
   }
 
-  // if (Object.keys(filtersData).length > 0) {
-  //   andConditions.push({
-  //     AND: Object.keys(filtersData).map(key => ({
-  //       [key]: {
-  //         equals: (filtersData as any)[key],
-  //       },
-  //     })),
-  //   });
-  // }
   if (Object.keys(filtersData).length > 0) {
     andConditions.push({
       AND: Object.keys(filtersData).map(key => {
@@ -45,6 +36,37 @@ export const findFilterConditions = (
           };
         }
       }),
+    });
+  }
+
+  return andConditions;
+};
+
+export const findFilterConditionsWithoutRelation = (
+  searchTerm: string | undefined,
+  filtersData: object,
+  searchableFields: string[]
+) => {
+  const andConditions = [];
+
+  if (searchTerm) {
+    andConditions.push({
+      OR: searchableFields.map(field => ({
+        [field]: {
+          contains: searchTerm,
+          mode: 'insensitive',
+        },
+      })),
+    });
+  }
+
+  if (Object.keys(filtersData).length > 0) {
+    andConditions.push({
+      AND: Object.keys(filtersData).map(key => ({
+        [key]: {
+          equals: (filtersData as any)[key],
+        },
+      })),
     });
   }
 

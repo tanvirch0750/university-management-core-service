@@ -9,6 +9,10 @@ import { findFilterConditions } from '../../../shared/findFilterConditions';
 import { orderByConditions } from '../../../shared/orderCondition';
 import prisma from '../../../shared/prisma';
 import { offeredCourseSearchableFields } from '../offeredCourse/offeredCourse.constant';
+import {
+  offeredCourseSectionRelationalFields,
+  offeredCourseSectionRelationalFieldsMapper,
+} from './offeredCourseSection.constant';
 import { IOfferedCourseSectionFilterRequest } from './offeredCourseSection.interface';
 
 const insertIntoDB = async (data: any): Promise<OfferedCourseSection> => {
@@ -45,7 +49,9 @@ const getAllFromDB = async (
   const andConditions = findFilterConditions(
     searchTerm,
     filterData,
-    offeredCourseSearchableFields
+    offeredCourseSearchableFields,
+    offeredCourseSectionRelationalFields,
+    offeredCourseSectionRelationalFieldsMapper
   );
 
   const whereConditons: Prisma.OfferedCourseSectionWhereInput =

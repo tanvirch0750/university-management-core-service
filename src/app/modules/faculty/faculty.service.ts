@@ -5,7 +5,11 @@ import { IpaginationOptions } from '../../../interfaces/paginationOptions';
 import { findFilterConditions } from '../../../shared/findFilterConditions';
 import { orderByConditions } from '../../../shared/orderCondition';
 import prisma from '../../../shared/prisma';
-import { facultySearchableFields } from './faculty.constant';
+import {
+  facultyRelationalFields,
+  facultyRelationalFieldsMapper,
+  facultySearchableFields,
+} from './faculty.constant';
 import { IFacultyFilters } from './faculty.interface';
 
 const insertIntoDB = async (data: Faculty): Promise<Faculty> => {
@@ -29,7 +33,9 @@ const getAllFromDB = async (
   const andConditions = findFilterConditions(
     searchTerm,
     filterData,
-    facultySearchableFields
+    facultySearchableFields,
+    facultyRelationalFields,
+    facultyRelationalFieldsMapper
   );
 
   const whereConditons: Prisma.FacultyWhereInput =
