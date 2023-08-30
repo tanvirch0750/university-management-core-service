@@ -29,6 +29,12 @@ router.post(
   SemesterRegistrationController.insertIntoDB
 );
 
+router.post(
+  '/start-registration',
+  auth(ENUM_USER_ROLE.STUDENT),
+  SemesterRegistrationController.startMyRegistrationCreate
+);
+
 router.get('/', SemesterRegistrationController.getAllFromDB);
 
 export const semesterRegistrationRoutes = router;

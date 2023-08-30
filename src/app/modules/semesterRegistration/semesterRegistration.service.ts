@@ -2,6 +2,7 @@ import {
   Prisma,
   SemesterRegestration,
   SemesterRegestrationStatus,
+  StudentSemesterRegistration,
 } from '@prisma/client';
 import httpStatus from 'http-status';
 import ApiError from '../../../errors/ApiError';
@@ -167,10 +168,82 @@ const deleteDataById = async (id: string): Promise<SemesterRegestration> => {
   return result;
 };
 
+const startMyRegistration = async (
+  authUserId: string
+): Promise<{
+  semesterRegistration: SemesterRegestration | null;
+  studentSemesterRegistration: StudentSemesterRegistration | null;
+}> => {
+  const studentInfo = await prisma.student.findFirst({
+    where: {
+      studentId: authUserId,
+    },
+  });
+
+  if (!studentInfo) {
+    throw new ApiError('Student Info not found!', httpStatus.BAD_REQUEST);
+  }
+
+  const semesterRegistrationInfo = await prisma.semesterRegestration.findFirst({
+    where: {
+      status: {
+        in: [
+          SemesterRegestrationStatus.ONGOING,
+          SemesterRegestrationStatus.UPCOMING,
+        ],
+      },
+    },
+  });
+
+  if (
+    semesterRegistrationInfo?.status === SemesterRegestrationStatus.UPCOMING
+  ) {
+    throw new ApiError(
+      'Registration is not started yet',
+      httpStatus.BAD_REQUEST
+    );
+  }
+
+  let studentRegistration = await prisma.studentSemesterRegistration.findFirst({
+    where: {
+      student: {
+        id: studentInfo?.id,
+      },
+      semesterRegistration: {
+        id: semesterRegistrationInfo?.id,
+      },
+    },
+  });
+
+  if (!studentRegistration) {
+    studentRegistration = await prisma.studentSemesterRegistration.create({
+      // we can just insert id but connect is another way of insert relation related field
+      data: {
+        student: {
+          connect: {
+            id: studentInfo?.id,
+          },
+        },
+        semesterRegistration: {
+          connect: {
+            id: semesterRegistrationInfo?.id,
+          },
+        },
+      },
+    });
+  }
+
+  return {
+    semesterRegistration: semesterRegistrationInfo,
+    studentSemesterRegistration: studentRegistration,
+  };
+};
+
 export const SemesterRegestrationServices = {
   insertIntoDB,
   getAllFromDB,
   getDataById,
   updateDataById,
   deleteDataById,
+  startMyRegistration,
 };

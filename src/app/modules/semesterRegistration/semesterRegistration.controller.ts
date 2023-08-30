@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { RequestHandler } from 'express';
 import httpStatus from 'http-status';
 import { paginationFields } from '../../../constants/paginationFields';
@@ -118,10 +119,28 @@ const deleteDataById: RequestHandler = catchAsync(async (req, res, next) => {
   });
 });
 
+export const startMyRegistrationCreate: RequestHandler = catchAsync(
+  async (req, res) => {
+    const user = (req as any).user;
+    const result = await SemesterRegestrationServices.startMyRegistration(
+      user.userId
+    );
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      status: 'success',
+      message: 'Student Semester Registration created successfully',
+      data: result,
+    });
+  }
+);
+
 export const SemesterRegistrationController = {
   insertIntoDB,
   getAllFromDB,
   getDataById,
   updateDataById,
   deleteDataById,
+  startMyRegistrationCreate,
 };
