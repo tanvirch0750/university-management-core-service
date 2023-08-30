@@ -78,7 +78,65 @@ const getAllFromDB = async (
   };
 };
 
+const getDataById = async (
+  id: string
+): Promise<OfferedCourseClassSchedule | null> => {
+  const result = await prisma.offeredCourseClassSchedule.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      semesterRegistration: true,
+      offeredCourseSection: true,
+      room: true,
+      faculty: true,
+    },
+  });
+  return result;
+};
+
+const updateDataById = async (
+  id: string,
+  payload: Partial<OfferedCourseClassSchedule>
+): Promise<OfferedCourseClassSchedule> => {
+  const result = await prisma.offeredCourseClassSchedule.update({
+    where: {
+      id,
+    },
+    data: payload,
+    include: {
+      semesterRegistration: true,
+      offeredCourseSection: true,
+      room: true,
+      faculty: true,
+    },
+  });
+
+  return result;
+};
+
+const deleteDataById = async (
+  id: string
+): Promise<OfferedCourseClassSchedule> => {
+  const result = await prisma.offeredCourseClassSchedule.delete({
+    where: {
+      id,
+    },
+    include: {
+      semesterRegistration: true,
+      offeredCourseSection: true,
+      room: true,
+      faculty: true,
+    },
+  });
+
+  return result;
+};
+
 export const OfferedCourseClassScheduleServices = {
   insertIntoDB,
   getAllFromDB,
+  getDataById,
+  updateDataById,
+  deleteDataById,
 };

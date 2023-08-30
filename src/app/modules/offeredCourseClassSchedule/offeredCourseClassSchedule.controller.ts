@@ -51,7 +51,82 @@ export const getAllFromDB: RequestHandler = catchAsync(
   }
 );
 
+const getDataById: RequestHandler = catchAsync(async (req, res, next) => {
+  const result = await OfferedCourseClassScheduleServices.getDataById(
+    req.params.id
+  );
+
+  if (!result) {
+    return next(
+      new ApiError(
+        `No Offered course class schedule found with this id`,
+        httpStatus.NOT_FOUND
+      )
+    );
+  }
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    status: 'success',
+    message: 'Offered course class schedule retrived successfully',
+    data: result,
+  });
+});
+
+const updateDataById: RequestHandler = catchAsync(async (req, res, next) => {
+  const payload = req.body;
+
+  const result = await OfferedCourseClassScheduleServices.updateDataById(
+    req.params.id,
+    payload
+  );
+
+  if (!result) {
+    return next(
+      new ApiError(
+        `No Offered course class schedule found with this id`,
+        httpStatus.NOT_FOUND
+      )
+    );
+  }
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    status: 'success',
+    message: 'Room updated successfully',
+    data: result,
+  });
+});
+
+const deleteDataById: RequestHandler = catchAsync(async (req, res, next) => {
+  const result = await OfferedCourseClassScheduleServices.deleteDataById(
+    req.params.id
+  );
+
+  if (!result) {
+    return next(
+      new ApiError(
+        `No Offered course class schedule found with this id`,
+        httpStatus.NOT_FOUND
+      )
+    );
+  }
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    status: 'success',
+    message: 'Offered course class schedule deleted successfully',
+    data: result,
+  });
+});
+
 export const OfferedCourseClassScheduleController = {
   insertIntoDB,
   getAllFromDB,
+  getDataById,
+  updateDataById,
+  deleteDataById,
 };
