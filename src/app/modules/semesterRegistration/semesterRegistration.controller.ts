@@ -136,6 +136,20 @@ export const startMyRegistrationCreate: RequestHandler = catchAsync(
   }
 );
 
+export const enrollIntoCourse: RequestHandler = catchAsync(async (req, res) => {
+  const user = (req as any).user;
+
+  console.log(user);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    status: 'success',
+    message: 'Student Semester Registration created successfully',
+    data: {},
+  });
+});
+
 export const SemesterRegistrationController = {
   insertIntoDB,
   getAllFromDB,
@@ -143,4 +157,5 @@ export const SemesterRegistrationController = {
   updateDataById,
   deleteDataById,
   startMyRegistrationCreate,
+  enrollIntoCourse,
 };

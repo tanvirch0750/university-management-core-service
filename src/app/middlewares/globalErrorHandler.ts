@@ -50,7 +50,8 @@ const allErrors = (err: any) => {
     error = handleZodError(error);
   }
 
-  if (err?.name === 'CastError') error = handleClientError(error);
+  if (err instanceof Prisma.PrismaClientKnownRequestError)
+    error = handleClientError(error);
   if (err?.code === 11000) error = handleDuplicateFieldsErrorDB(error);
   if (err instanceof Prisma.PrismaClientValidationError) {
     error = handleValidationErrorDB(error);

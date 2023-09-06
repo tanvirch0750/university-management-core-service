@@ -37,4 +37,10 @@ router.post(
 
 router.get('/', SemesterRegistrationController.getAllFromDB);
 
+router.post(
+  '/enroll-into-course',
+  auth(ENUM_USER_ROLE.STUDENT),
+  SemesterRegistrationController.enrollIntoCourse
+);
+
 export const semesterRegistrationRoutes = router;
