@@ -172,6 +172,40 @@ export const withdrawFromCourse: RequestHandler = catchAsync(
   }
 );
 
+export const confirmMyRegistration: RequestHandler = catchAsync(
+  async (req, res) => {
+    const user = (req as any).user;
+    const result = await SemesterRegestrationServices.confirmMyRegistration(
+      user.userId
+    );
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      status: 'success',
+      message: 'Registration confirmed',
+      data: result,
+    });
+  }
+);
+
+export const getMyRegistration: RequestHandler = catchAsync(
+  async (req, res) => {
+    const user = (req as any).user;
+    const result = await SemesterRegestrationServices.getMyRegistration(
+      user.userId
+    );
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      status: 'success',
+      message: 'Registration retrived successfully',
+      data: result,
+    });
+  }
+);
+
 export const SemesterRegistrationController = {
   insertIntoDB,
   getAllFromDB,
@@ -181,4 +215,6 @@ export const SemesterRegistrationController = {
   startMyRegistrationCreate,
   enrollIntoCourse,
   withdrawFromCourse,
+  confirmMyRegistration,
+  getMyRegistration,
 };
