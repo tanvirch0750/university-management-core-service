@@ -139,16 +139,38 @@ export const startMyRegistrationCreate: RequestHandler = catchAsync(
 export const enrollIntoCourse: RequestHandler = catchAsync(async (req, res) => {
   const user = (req as any).user;
 
-  console.log(user);
+  const result = await SemesterRegestrationServices.enrollIntoCourse(
+    user.userId,
+    req.body
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     status: 'success',
-    message: 'Student Semester Registration created successfully',
-    data: {},
+    message: 'Student Semester Registration course enrolled successfully',
+    data: result,
   });
 });
+
+export const withdrawFromCourse: RequestHandler = catchAsync(
+  async (req, res) => {
+    const user = (req as any).user;
+
+    const result = await SemesterRegestrationServices.withdrewFromCourse(
+      user.userId,
+      req.body
+    );
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      status: 'success',
+      message: 'Student Wihdraw from enrolled course successfully',
+      data: result,
+    });
+  }
+);
 
 export const SemesterRegistrationController = {
   insertIntoDB,
@@ -158,4 +180,5 @@ export const SemesterRegistrationController = {
   deleteDataById,
   startMyRegistrationCreate,
   enrollIntoCourse,
+  withdrawFromCourse,
 };
