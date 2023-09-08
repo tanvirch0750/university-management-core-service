@@ -10,6 +10,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// TODO:  add isCurrent field to auth service Academic Semester model
 model AcademicSemester {
   id                         String                      @id @default(uuid())
   year                       String
