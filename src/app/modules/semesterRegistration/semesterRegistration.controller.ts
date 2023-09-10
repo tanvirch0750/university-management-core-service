@@ -220,6 +220,23 @@ export const startNewSemester: RequestHandler = catchAsync(async (req, res) => {
   });
 });
 
+export const getMySemesterRegCouses: RequestHandler = catchAsync(
+  async (req, res) => {
+    const user = (req as any).user;
+    const result = await SemesterRegestrationServices.getMySemesterRegCouses(
+      user.userId
+    );
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      status: 'success',
+      message: 'My registration courses data fatched!',
+      data: result,
+    });
+  }
+);
+
 export const SemesterRegistrationController = {
   insertIntoDB,
   getAllFromDB,
@@ -232,4 +249,5 @@ export const SemesterRegistrationController = {
   confirmMyRegistration,
   getMyRegistration,
   startNewSemester,
+  getMySemesterRegCouses,
 };
