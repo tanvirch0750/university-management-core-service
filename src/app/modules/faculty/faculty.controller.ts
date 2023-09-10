@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { RequestHandler } from 'express';
 import httpStatus from 'http-status';
 import { paginationFields } from '../../../constants/paginationFields';
@@ -140,6 +141,20 @@ const removeCourses: RequestHandler = catchAsync(async (req, res, next) => {
   });
 });
 
+const myCourses: RequestHandler = catchAsync(async (req, res) => {
+  const user = (req as any).user;
+  const filter = pick(req.query, ['academicSemesterId', 'courseId']);
+  const result = await FacultyServices.myCourses(user, filter);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    status: 'success',
+    message: 'My courses data fetched successfully!',
+    data: result,
+  });
+});
+
 export const FacultyController = {
   insertIntoDB,
   getAllFromDB,
@@ -148,4 +163,5 @@ export const FacultyController = {
   deleteDataById,
   assignCourses,
   removeCourses,
+  myCourses,
 };
