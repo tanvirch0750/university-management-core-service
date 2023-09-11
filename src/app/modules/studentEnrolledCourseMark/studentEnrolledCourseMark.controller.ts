@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { RequestHandler } from 'express';
 import httpStatus from 'http-status';
 import { paginationFields } from '../../../constants/paginationFields';
@@ -65,8 +66,29 @@ export const updateFinalMarks: RequestHandler = catchAsync(async (req, res) => {
   });
 });
 
+export const getMyCourseMarks: RequestHandler = catchAsync(async (req, res) => {
+  const filters = pick(req.query, studentEnrolledCourseMarkFilterableFields);
+  const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
+  const user = (req as any).user;
+
+  const result = await StudentEnrolledCourseMarkService.getMyCourseMarks(
+    filters,
+    options,
+    user
+  );
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    status: 'success',
+    message: 'Student course marks fetched successfully',
+    data: result,
+  });
+});
+
 export const StudentEnrolledCourseMarkConroller = {
   getAllFromDB,
   updateStudentMarks,
   updateFinalMarks,
+  getMyCourseMarks,
 };

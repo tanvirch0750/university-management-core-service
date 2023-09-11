@@ -5,6 +5,12 @@ import { StudentEnrolledCourseMarkConroller } from './studentEnrolledCourseMark.
 
 const router = express.Router();
 
+router.get(
+  '/my-marks',
+  auth(ENUM_USER_ROLE.STUDENT),
+  StudentEnrolledCourseMarkConroller.getMyCourseMarks
+);
+
 router.patch(
   '/update-marks',
   StudentEnrolledCourseMarkConroller.updateStudentMarks
