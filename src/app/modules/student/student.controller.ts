@@ -117,6 +117,25 @@ export const myCourses: RequestHandler = catchAsync(async (req, res) => {
   });
 });
 
+export const getMyCourseSchedules: RequestHandler = catchAsync(
+  async (req, res) => {
+    const user = (req as any).user;
+    const filter = pick(req.query, ['courseId', 'academicSemesterId']);
+    const result = await StudentServices.getMyCourseSchedules(
+      user.userId,
+      filter
+    );
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      status: 'success',
+      message: 'Course Schedules data fetched successfully',
+      data: result,
+    });
+  }
+);
+
 export const StudentController = {
   insertIntoDB,
   getAllFromDB,
@@ -124,4 +143,5 @@ export const StudentController = {
   updateDataById,
   deleteDataById,
   myCourses,
+  getMyCourseSchedules,
 };
