@@ -220,10 +220,10 @@ export const startNewSemester: RequestHandler = catchAsync(async (req, res) => {
   });
 });
 
-export const getMySemesterRegCouses: RequestHandler = catchAsync(
+export const getMySemesterRegCourses: RequestHandler = catchAsync(
   async (req, res) => {
     const user = (req as any).user;
-    const result = await SemesterRegestrationServices.getMySemesterRegCouses(
+    const result = await SemesterRegestrationServices.getMySemesterRegCourses(
       user.userId
     );
 
@@ -249,5 +249,5 @@ export const SemesterRegistrationController = {
   confirmMyRegistration,
   getMyRegistration,
   startNewSemester,
-  getMySemesterRegCouses,
+  getMySemesterRegCourses,
 };

@@ -1,4 +1,5 @@
-import { Prisma, Student } from '@prisma/client';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Prisma, Student, StudentEnrolledCourseStatus } from '@prisma/client';
 import { calculatePagination } from '../../../helpers/paginationHelper';
 import { IGenericPaginationResponse } from '../../../interfaces/genericPaginationResponse';
 import { IpaginationOptions } from '../../../interfaces/paginationOptions';
@@ -11,6 +12,7 @@ import {
   studentSearchableFields,
 } from './student.constant';
 import { IStudentFilters } from './student.interface';
+import { StudentUtils } from './student.utils';
 
 const insertIntoDB = async (data: Student): Promise<Student> => {
   const result = await prisma.student.create({
@@ -210,6 +212,40 @@ const getMyCourseSchedules = async (
   return result;
 };
 
+const getMyAcademicInfo = async (authUserId: string): Promise<any> => {
+  const academicInfo = await prisma.studentAcademicInfo.findFirst({
+    where: {
+      student: {
+        studentId: authUserId,
+      },
+    },
+  });
+
+  const enrolledCourses = await prisma.studentEnrolledCourse.findMany({
+    where: {
+      student: {
+        studentId: authUserId,
+      },
+      status: StudentEnrolledCourseStatus.COMPLETED,
+    },
+    include: {
+      course: true,
+      academicSemester: true,
+    },
+    orderBy: {
+      createdAt: 'asc',
+    },
+  });
+
+  const groupByAcademicSemesterData =
+    StudentUtils.groupByAcademicSemester(enrolledCourses);
+
+  return {
+    academicInfo,
+    courses: groupByAcademicSemesterData,
+  };
+};
+
 export const StudentServices = {
   insertIntoDB,
   getAllFromDB,
@@ -218,4 +254,5 @@ export const StudentServices = {
   deleteDataById,
   myCourses,
   getMyCourseSchedules,
+  getMyAcademicInfo,
 };

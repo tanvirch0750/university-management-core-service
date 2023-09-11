@@ -215,7 +215,7 @@ const myCourses = async (
     },
   });
 
-  const couseAndSchedule = offeredCourseSections.reduce(
+  const courseAndSchedule = offeredCourseSections.reduce(
     (acc: any, obj: any) => {
       //console.log(obj)
 
@@ -223,7 +223,7 @@ const myCourses = async (
       const classSchedules = obj.offeredCourseClassSchedules;
 
       const existingCourse = acc.find(
-        (item: any) => item.couse?.id === course?.id
+        (item: any) => item.course?.id === course?.id
       );
       if (existingCourse) {
         existingCourse.sections.push({
@@ -245,7 +245,7 @@ const myCourses = async (
     },
     []
   );
-  return couseAndSchedule;
+  return courseAndSchedule;
 };
 
 export const FacultyServices = {

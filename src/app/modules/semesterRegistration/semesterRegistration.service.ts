@@ -680,7 +680,7 @@ const startNewSemester = async (
   };
 };
 
-const getMySemesterRegCouses = async (authUserId: string) => {
+const getMySemesterRegCourses = async (authUserId: string) => {
   const student = await prisma.student.findFirst({
     where: {
       studentId: authUserId,
@@ -791,5 +791,5 @@ export const SemesterRegestrationServices = {
   confirmMyRegistration,
   getMyRegistration,
   startNewSemester,
-  getMySemesterRegCouses,
+  getMySemesterRegCourses,
 };

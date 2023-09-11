@@ -16,7 +16,7 @@ router.get(
 router.get(
   '/get-my-semsester-courses',
   auth(ENUM_USER_ROLE.STUDENT),
-  SemesterRegistrationController.getMySemesterRegCouses
+  SemesterRegistrationController.getMySemesterRegCourses
 );
 
 router.get('/:id', SemesterRegistrationController.getDataById);
